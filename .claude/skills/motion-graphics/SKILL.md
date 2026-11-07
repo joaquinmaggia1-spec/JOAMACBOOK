@@ -86,4 +86,6 @@ Un video de fotos a pantalla completa con texto encima NO es motion graphics: es
 - Hoja de contacto con filas calculadas desde frames a 30 fps → calcular con la duración.
 - Expresiones de ffmpeg con `<` → usar `lt()` / `gte()`.
 - Node no usa `HTTPS_PROXY` sin `NODE_USE_ENV_PROXY=1`.
+- Whisper/faster-whisper: el modelo baja de huggingface.co → us.aws.cdn.hf.co; usar `HF_HUB_DISABLE_XET=1` (si no, pide cas-server.xethub.hf.co). Con PyAV nuevo, pasar el audio ya decodificado (numpy) en vez de la ruta.
+- El título gigante de 430 px se salía del ancho: medir el ancho real (Anton ≈ 0.45 em por letra) y partir en líneas.
 - La skill y `recursos/` vivían solo en el contenedor y se perdieron → ahora la skill está en el repo (`.claude/skills/motion-graphics/`); commitear cuando el usuario lo pida.

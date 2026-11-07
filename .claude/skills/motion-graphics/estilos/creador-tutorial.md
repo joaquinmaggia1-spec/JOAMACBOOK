@@ -67,3 +67,14 @@ Cortes de cámara cada 2-10 s; el texto cambia cada 0.25-0.5 s (palabra por pala
 5. Tutorial: grabación de pantalla del usuario en la mitad inferior; si no hay, mockups de UI en HTML.
 6. Cita final con la palabra clave del guion entre comillas, en amarillo limón.
 7. Cierre negro con el Instagram y el handle del usuario.
+
+## 6. Receta probada (video "5 pilares", 7 nov 2026)
+Material: 4 clips de iPhone 4K HEVC verticales (rotation -90) con micrófono de solapa.
+1. Normalizar: `ffmpeg -i in.mov -map 0:v:0 -map 0:a:0 -vf "scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,fps=30" -c:v libx264 -crf 18 -c:a aac clip.mp4` (ffmpeg aplica la rotación solo).
+2. Transcribir con tiempos por palabra: `HF_HUB_DISABLE_XET=1 python3 -I <skill>/scripts/transcribir.py medium words.json a1.wav ...` (wav mono 16 kHz; faster-whisper; hosts huggingface.co y us.aws.cdn.hf.co). Corregir a mano lo que Whisper entiende mal (voseo: "pagues", "vení", "hacé").
+3. Cortar segmentos por tiempos de palabra y normalizar la voz: `-af "highpass=f=80,loudnorm=I=-16:TP=-1.5:LRA=9"`.
+4. Recorte de la persona para el título detrás: `npx hyperframes remove-background hook.mp4 -o hook_cut.webm` (CPU, ~2 fps; 4 s ≈ 1 min). Capas: video → título → `hook_cut.webm` (mismo data-start) → subtítulos.
+5. Generador: `plantillas/creador_tutorial_gen.py <proyecto>` (cambiar bloques, palabras, acentos y sfx). Fuentes vendorizadas desde npm: `@fontsource/anton`, `@fontsource/bebas-neue`, `@fontsource/playfair-display` (900 italic).
+6. Pantalla dividida sin grabación de pantalla: arriba la cara (video desplazado -110 px dentro de 630 px), abajo un B-roll del mismo tema (flexiones en cámara lenta 0.6x con `setpts`).
+7. Subtítulos: palabra por palabra pero con mínimo ~0.45 s por grupo de 1-2 palabras (si no, `line_unread`); 3+ palabras necesitan ≥1.05 s.
+8. Logo de Instagram oficial a color (media-use resolve --type logo), nunca con `filter: brightness(0) invert(1)` (queda un cuadrado blanco). Cada uso con su copia de archivo.
